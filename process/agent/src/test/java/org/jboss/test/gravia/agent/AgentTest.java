@@ -19,14 +19,21 @@
  */
 package org.jboss.test.gravia.agent;
 
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 import org.jboss.gravia.agent.Agent;
-import org.jboss.gravia.agent.ControllerService;
+import org.jboss.gravia.agent.internal.Main;
+import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.process.spi.SelfRegistrationBuilder;
 import org.jboss.gravia.runtime.ServiceLocator;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-
 
 /**
  * Test the default resolver integration.
@@ -36,14 +43,30 @@ import org.junit.Test;
  */
 public class AgentTest {
 
+    private Main agentMain;
+
+    @Before
+    public void setUp() throws Exception {
+        agentMain = new Main();
+        agentMain.start();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Assert.assertTrue(agentMain.shutdown(30, TimeUnit.SECONDS));
+    }
+
     @Test
-    public void testAgent() throws Exception {
+    public void testSelfRegistration() throws Exception {
 
-        Agent agent = new Agent();
-        agent.start();
+        ProcessOptions options = new SelfRegistrationBuilder()
+            .identityPrefix("testProc")
+            .targetPath(Paths.get(""))
+            .getProcessOptions();
 
-        ServiceLocator.getRequiredService(ControllerService.class);
-
-        Assert.assertTrue(agent.shutdown(30,  TimeUnit.SECONDS));
+        Agent agent = ServiceLocator.getRequiredService(Agent.class);
+        ManagedProcess process = agent.createProcess(options);
+        Assert.assertEquals(ProcessIdentity.create("testProc"), process.getIdentity());
+        Assert.assertEquals(State.STARTED, process.getState());
     }
 }

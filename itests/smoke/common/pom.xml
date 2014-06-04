@@ -27,13 +27,13 @@
     
     <parent>
         <groupId>org.jboss.gravia</groupId>
-        <artifactId>gravia-itests</artifactId>
+        <artifactId>gravia-itests-smoke</artifactId>
         <version>1.1.0.Beta26-SNAPSHOT</version>
     </parent>
 
-    <name>Gravia :: Integration Tests :: Common</name>
+    <name>Gravia :: Integration Tests :: Smoke :: Common</name>
     
-    <artifactId>gravia-itests-common</artifactId>
+    <artifactId>gravia-itests-smoke-common</artifactId>
 
     <dependencies>
         <dependency>

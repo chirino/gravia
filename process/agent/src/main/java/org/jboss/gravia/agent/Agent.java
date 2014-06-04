@@ -1,6 +1,6 @@
 /*
  * #%L
- * Gravia :: Agent
+ * Gravia :: Resolver
  * %%
  * Copyright (C) 2010 - 2014 JBoss by Red Hat
  * %%
@@ -17,62 +17,35 @@
  * limitations under the License.
  * #L%
  */
-
 package org.jboss.gravia.agent;
 
-import java.io.InputStream;
-import java.util.Dictionary;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
-import org.jboss.gravia.runtime.Module;
-import org.jboss.gravia.runtime.Runtime;
-import org.jboss.gravia.runtime.RuntimeLocator;
-import org.jboss.gravia.runtime.embedded.spi.EmbeddedRuntimeFactory;
-import org.jboss.gravia.runtime.spi.DefaultPropertiesProvider;
-import org.jboss.gravia.runtime.spi.PropertiesHeadersProvider;
-import org.jboss.gravia.runtime.spi.PropertiesProvider;
+import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.runtime.LifecycleException;
 
 
 /**
- * The gravia agent process.
+ * The agent interface
  *
  * @author thomas.diesler@jboss.com
  * @since 29-May-2014
  */
-public final class Agent {
+public interface Agent {
 
-    private Runtime runtime;
+    Set<String> getProcessHandlers();
 
-    public static void main(String[] args) throws Exception {
-        Agent agent = new Agent();
-        agent.start();
-    }
+    Set<ProcessIdentity> getProcessIdentities();
 
-    public void start() throws Exception {
+    ManagedProcess getManagedProcess(ProcessIdentity processId);
 
-        // Create Runtime
-        PropertiesProvider propsProvider = new DefaultPropertiesProvider();
-        runtime = RuntimeLocator.createRuntime(new EmbeddedRuntimeFactory(), propsProvider);
-        runtime.init();
+    ManagedProcess createProcess(ProcessOptions options);
 
-        // Install/Start the Agent as a Module
-        Module module = installAgentModule();
-        module.start();
-    }
+    void startProcess(ProcessIdentity processId) throws LifecycleException;
 
-    private Module installAgentModule() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream input = classLoader.getResourceAsStream("META-INF/agent-module.headers");
-        Dictionary<String, String> headers = new PropertiesHeadersProvider(input).getHeaders();
-        return runtime.installModule(classLoader, headers);
-    }
+    void stopProcess(ProcessIdentity processId) throws LifecycleException;
 
-    public boolean shutdown(long timeout, TimeUnit unit) {
-        runtime.shutdown();
-        try {
-            return runtime.awaitShutdown(timeout, unit);
-        } catch (InterruptedException ex) {
-            return false;
-        }
-    }
+    void destroyProcess(ProcessIdentity processId) throws LifecycleException;
 }

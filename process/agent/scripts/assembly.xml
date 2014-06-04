@@ -1,0 +1,73 @@
+<!--
+  #%L
+  JBossOSGi Framework
+  %%
+  Copyright (C) 2010 - 2012 JBoss by Red Hat
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as 
+  published by the Free Software Foundation, either version 2.1 of the 
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public 
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  #L%
+  -->
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+    <id>all</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <!-- Dependency Sets -->
+    <dependencySets>
+        <dependencySet>
+            <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}
+            </outputFileNameMapping>
+            <includes>
+                <include>*:gravia-process-api:jar</include>
+                <include>*:gravia-runtime-api:jar</include>
+                <include>*:gravia-runtime-embedded:jar</include>
+                <include>*:slf4j-api:jar</include>
+            </includes>
+            <useStrictFiltering>true</useStrictFiltering>
+            <scope>compile</scope>
+            <unpack>true</unpack>
+        </dependencySet>
+        <dependencySet>
+            <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}
+            </outputFileNameMapping>
+            <includes>
+                <include>*:gravia-resource:jar</include>
+                <include>*:gravia-repository:jar</include>
+                <include>*:org.apache.felix.configadmin:jar</include>
+                <include>*:org.apache.felix.http.jetty:jar</include>
+                <include>*:org.apache.felix.metatype:jar</include>
+                <include>*:org.apache.felix.scr:jar</include>
+                <include>*:org.osgi.core:jar</include>
+                <include>*:org.osgi.enterprise:jar</include>
+                <include>*:slf4j-simple:jar</include>
+            </includes>
+            <useStrictFiltering>true</useStrictFiltering>
+            <scope>provided</scope>
+            <unpack>true</unpack>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/classes</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

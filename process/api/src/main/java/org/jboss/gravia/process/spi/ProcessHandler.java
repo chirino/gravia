@@ -17,31 +17,29 @@
  * limitations under the License.
  * #L%
  */
-package org.jboss.gravia.agent;
+package org.jboss.gravia.process.spi;
 
-import java.util.Map;
+import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.runtime.LifecycleException;
 
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
 
 /**
- * The agent controller
+ * The process handler
  *
  * @author thomas.diesler@jboss.com
  * @since 29-May-2014
  */
-@Component(service = { ControllerService.class }, configurationPolicy = ConfigurationPolicy.IGNORE, immediate = true)
-public final class ControllerService {
+public interface ProcessHandler {
 
-    @Activate
-    void activate(Map<String, Object> config) {
-        System.out.println("activate");
-    }
+    boolean accept(ProcessOptions options);
 
-    @Deactivate
-    void deactivate() {
+    ManagedProcess create(ProcessOptions options, ProcessIdentity identity);
 
-    }
+    void start(ManagedProcess process) throws LifecycleException;
+
+    void stop(ManagedProcess process) throws LifecycleException;
+
+    void destroy(ManagedProcess process);
 }

@@ -17,29 +17,14 @@
  * limitations under the License.
  * #L%
  */
-
-package org.jboss.gravia.process.api;
-
-import java.nio.file.Path;
-
+package org.jboss.gravia.process.spi;
 
 /**
- * The managed root container
+ * The self registration process options
  *
  * @author thomas.diesler@jboss.com
- * @since 26-Feb-2014
+ * @since 04-Jun-2014
  */
-public interface ManagedProcess {
+public class SelfRegistrationOptions extends AbstractProcessOptions {
 
-    enum State {
-        CREATED, STARTED, STOPPED, DESTROYED
-    }
-
-    ProcessOptions getCreateOptions();
-
-    ProcessIdentity getIdentity();
-
-    Path getHomePath();
-
-    State getState();
 }

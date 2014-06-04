@@ -33,15 +33,16 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.jboss.gravia.process.api.ManagedProcess;
-import org.jboss.gravia.process.api.ManagedProcessOptions;
-import org.jboss.gravia.process.api.PortManager;
+import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.process.utils.HostUtils;
 import org.jboss.gravia.repository.DefaultMavenDelegateRepository;
 import org.jboss.gravia.repository.MavenDelegateRepository;
 import org.jboss.gravia.resource.MavenCoordinates;
 import org.jboss.gravia.resource.Resource;
 import org.jboss.gravia.resource.ResourceContent;
 import org.jboss.gravia.runtime.LifecycleException;
-import org.jboss.gravia.runtime.ServiceLocator;
 import org.jboss.gravia.runtime.spi.PropertiesProvider;
 import org.jboss.gravia.utils.IllegalArgumentAssertion;
 import org.jboss.gravia.utils.IllegalStateAssertion;
@@ -52,33 +53,29 @@ import org.jboss.gravia.utils.IllegalStateAssertion;
  * @author thomas.diesler@jboss.com
  * @since 26-Feb-2014
  */
-public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> implements ManagedProcess<C> {
+public abstract class AbstractProcessHandler implements ProcessHandler {
 
     private final MavenDelegateRepository mavenRepository;
-    private final C createOptions;
-    private File homeDir;
-    private State state;
     private Process process;
 
-    protected AbstractManagedProcess(C options, PropertiesProvider propsProvider) {
-        IllegalArgumentAssertion.assertNotNull(options, "options");
+    protected AbstractProcessHandler(PropertiesProvider propsProvider) {
+        IllegalArgumentAssertion.assertNotNull(propsProvider, "propsProvider");
         this.mavenRepository = new DefaultMavenDelegateRepository(propsProvider);
-        this.createOptions = options;
     }
 
     @Override
-    public C getCreateOptions() {
-        return createOptions;
+    public boolean accept(ProcessOptions options) {
+        return false;
     }
 
     @Override
-    public final synchronized void create() {
-        IllegalStateAssertion.assertTrue(state == null, "Cannot create container in state: " + state);
+    public final ManagedProcess create(ProcessOptions options, ProcessIdentity identity) {
 
-        File targetDir = getCreateOptions().getTargetDirectory();
+        File targetDir = options.getTargetPath().toAbsolutePath().toFile();
         IllegalStateAssertion.assertTrue(targetDir.isDirectory() || targetDir.mkdirs(), "Cannot create target dir: " + targetDir);
 
-        for (MavenCoordinates artefact : getCreateOptions().getMavenCoordinates()) {
+        File homeDir = null;
+        for (MavenCoordinates artefact : options.getMavenCoordinates()) {
             Resource resource = mavenRepository.findMavenResource(artefact);
             IllegalStateAssertion.assertNotNull(resource, "Cannot find maven resource: " + artefact);
 
@@ -128,32 +125,23 @@ public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> im
             }
         }
 
-        state = State.CREATED;
-
+        ManagedProcess managedProcess = new ImmutableManagedProcess(identity, options, homeDir.toPath(), State.CREATED);
         try {
-            doConfigure();
+            doConfigure(managedProcess);
         } catch (Exception ex) {
             throw new LifecycleException("Cannot configure container", ex);
         }
+        return managedProcess;
     }
 
     @Override
-    public File getHomeDir() {
-        return homeDir;
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
-    @Override
-    public final synchronized void start() {
-        assertNotDestroyed();
+    public final void start(ManagedProcess process) {
+        State state = process.getState();
+        assertNotDestroyed(state);
         try {
             if (state == State.CREATED || state == State.STOPPED) {
-                doStart();
-                state = State.STARTED;
+                doStart(process);
+                IllegalStateAssertion.assertNotNull(process, "No process created");
             }
         } catch (Exception ex) {
             throw new LifecycleException("Cannot start container", ex);
@@ -161,13 +149,13 @@ public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> im
     }
 
     @Override
-    public final synchronized void stop() {
-        assertNotDestroyed();
+    public final void stop(ManagedProcess process) {
+        State state = process.getState();
+        assertNotDestroyed(state);
         try {
             if (state == State.STARTED) {
-                doStop();
+                doStop(process);
                 destroyProcess();
-                state = State.STOPPED;
             }
         } catch (Exception ex) {
             throw new LifecycleException("Cannot stop container", ex);
@@ -175,43 +163,42 @@ public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> im
     }
 
     @Override
-    public final synchronized void destroy() {
-        assertNotDestroyed();
+    public final void destroy(ManagedProcess process) {
+        State state = process.getState();
+        assertNotDestroyed(state);
         if (state == State.STARTED) {
             try {
-                stop();
+                stop(process);
             } catch (Exception ex) {
                 // ignore
             }
         }
         try {
-            doDestroy();
+            doDestroy(process);
         } catch (Exception ex) {
             throw new LifecycleException("Cannot destroy container", ex);
-        } finally {
-            state = State.DESTROYED;
         }
     }
 
-    private void assertNotDestroyed() {
+    private void assertNotDestroyed(State state) {
         IllegalStateAssertion.assertFalse(state == State.DESTROYED, "Cannot start container in state: " + state);
     }
 
-    protected void doConfigure() throws Exception {
+    protected void doConfigure(ManagedProcess process) throws Exception {
     }
 
-    protected void doStart() throws Exception {
+    protected void doStart(ManagedProcess process) throws Exception {
     }
 
-    protected void doStop() throws Exception {
+    protected void doStop(ManagedProcess process) throws Exception {
     }
 
-    protected void doDestroy() throws Exception {
+    protected void doDestroy(ManagedProcess process) throws Exception {
     }
 
-    protected void startProcess(ProcessBuilder processBuilder) throws IOException {
+    protected void startProcess(ProcessBuilder processBuilder, ProcessOptions options) throws IOException {
         process = processBuilder.start();
-        new Thread(new ConsoleConsumer(process, getCreateOptions())).start();
+        new Thread(new ConsoleConsumer(process, options)).start();
     }
 
     protected void destroyProcess() throws Exception {
@@ -226,8 +213,7 @@ public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> im
     }
 
     protected int nextAvailablePort(int portValue, InetAddress bindAddr) {
-        PortManager portManager = ServiceLocator.getRequiredService(PortManager.class);
-        return portManager.nextAvailablePort(portValue, bindAddr);
+        return HostUtils.nextAvailablePort(portValue, bindAddr);
     }
 
     /**
@@ -237,9 +223,9 @@ public abstract class AbstractManagedProcess<C extends ManagedProcessOptions> im
     public static class ConsoleConsumer implements Runnable {
 
         private final Process process;
-        private final ManagedProcessOptions options;
+        private final ProcessOptions options;
 
-        public ConsoleConsumer(Process process, ManagedProcessOptions options) {
+        public ConsoleConsumer(Process process, ProcessOptions options) {
             this.process = process;
             this.options = options;
         }

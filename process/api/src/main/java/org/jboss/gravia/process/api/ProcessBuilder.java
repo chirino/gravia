@@ -19,24 +19,27 @@
  */
 package org.jboss.gravia.process.api;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.Path;
 
 import org.jboss.gravia.resource.MavenCoordinates;
 
 /**
- * Managed container create options
+ * A builder for a fabric container
  *
  * @author thomas.diesler@jboss.com
  * @since 14-Mar-2014
  */
-public interface ManagedProcessOptions {
+public interface ProcessBuilder<B extends ProcessBuilder<B, C>, C extends ProcessOptions> {
 
-    List<MavenCoordinates> getMavenCoordinates();
+    B identityPrefix(String prefix);
 
-    File getTargetDirectory();
+    B targetPath(Path targetPath);
 
-    String getJavaVmArguments();
+    B jvmArguments(String javaVmArguments);
 
-    boolean isOutputToConsole();
+    B addMavenCoordinates(MavenCoordinates coordinates);
+
+    B outputToConsole(boolean outputToConsole);
+
+    C getProcessOptions();
 }

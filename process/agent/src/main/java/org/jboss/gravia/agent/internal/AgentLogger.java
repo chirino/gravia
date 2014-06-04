@@ -1,8 +1,8 @@
 /*
  * #%L
- * Fabric8 :: SPI
+ * Gravia :: Runtime :: API
  * %%
- * Copyright (C) 2014 Red Hat
+ * Copyright (C) 2013 - 2014 JBoss by Red Hat
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,23 @@
  * limitations under the License.
  * #L%
  */
+package org.jboss.gravia.agent.internal;
 
-package org.jboss.gravia.process.api;
-
-import java.nio.file.Path;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The managed root container
+ * The logger provider
  *
  * @author thomas.diesler@jboss.com
- * @since 26-Feb-2014
+ * @since 27-Sep-2013
  */
-public interface ManagedProcess {
+public final class AgentLogger {
 
-    enum State {
-        CREATED, STARTED, STOPPED, DESTROYED
+    public static final Logger LOGGER = LoggerFactory.getLogger("org.jboss.gravia.agent");
+
+    // Hide ctor
+    private AgentLogger() {
     }
 
-    ProcessOptions getCreateOptions();
-
-    ProcessIdentity getIdentity();
-
-    Path getHomePath();
-
-    State getState();
 }

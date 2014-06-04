@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.jboss.gravia.Constants;
 import org.jboss.gravia.runtime.ModuleContext;
 import org.jboss.gravia.runtime.Runtime;
 import org.jboss.gravia.runtime.ServiceReference;
@@ -42,8 +43,16 @@ import org.osgi.service.cm.ConfigurationAdmin;
 public final class ConfigurationAdminPlugin extends AbstractRuntimePlugin {
 
     @Override
-    public String getBundleActivator() {
+    protected String getBundleActivator() {
         return "org.apache.felix.cm.impl.ConfigurationManager";
+    }
+
+    @Override
+    protected Dictionary<String, String> getPluginHeaders() {
+        Dictionary<String, String> headers = new Hashtable<>();
+        headers.put(Constants.GRAVIA_IDENTITY_CAPABILITY, "org.jboss.gravia.configadmin");
+        headers.put(Constants.MODULE_ACTIVATOR, getClass().getName());
+        return headers;
     }
 
     @Override
@@ -53,6 +62,7 @@ public final class ConfigurationAdminPlugin extends AbstractRuntimePlugin {
         ServiceReference<ConfigurationAdmin> sref = context.getServiceReference(ConfigurationAdmin.class);
         ConfigurationAdmin configAdmin = context.getService(sref);
 
+        // Load initial configurations
         Runtime runtime = context.getModule().adapt(Runtime.class);
         String confspecs = (String) runtime.getProperty(org.jboss.gravia.Constants.RUNTIME_CONFIGURATIONS);
         if (confspecs != null) {
@@ -72,7 +82,12 @@ public final class ConfigurationAdminPlugin extends AbstractRuntimePlugin {
                 Properties props = new Properties();
                 props.load(specurl.openStream());
 
-                Configuration config = factoryConfiguration ? configAdmin.createFactoryConfiguration(pid, null) : configAdmin.getConfiguration(pid, null);
+                Configuration config;
+                if (factoryConfiguration) {
+                    config = configAdmin.createFactoryConfiguration(pid, null);
+                } else {
+                    config = configAdmin.getConfiguration(pid, null);
+                }
                 config.update(propsToMap(props));
             }
         }

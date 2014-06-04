@@ -19,35 +19,45 @@
  */
 package org.jboss.gravia.process.spi;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jboss.gravia.process.api.ManagedProcessOptions;
+import org.jboss.gravia.process.api.ProcessOptions;
 import org.jboss.gravia.resource.MavenCoordinates;
 import org.jboss.gravia.utils.IllegalStateAssertion;
 
 
-public abstract class AbstractManagedProcessOptions implements ManagedProcessOptions {
+public abstract class AbstractProcessOptions implements ProcessOptions {
 
     private List<MavenCoordinates> mavenCoordinates = new ArrayList<MavenCoordinates>();
     private boolean outputToConsole;
+    private String identityPrefix;
     private String javaVmArguments;
-    private File targetDirectory;
+    private Path targetPath;
 
+    @Override
+    public String getIdentityPrefix() {
+        return identityPrefix;
+    }
+
+    @Override
     public List<MavenCoordinates> getMavenCoordinates() {
         return Collections.unmodifiableList(mavenCoordinates);
     }
 
-    public File getTargetDirectory() {
-        return targetDirectory;
+    @Override
+    public Path getTargetPath() {
+        return targetPath;
     }
 
+    @Override
     public String getJavaVmArguments() {
         return javaVmArguments;
     }
 
+    @Override
     public boolean isOutputToConsole() {
         return outputToConsole;
     }
@@ -56,12 +66,16 @@ public abstract class AbstractManagedProcessOptions implements ManagedProcessOpt
      * Setters are protected
      */
 
+    protected void setIdentityPrefix(String identityPrefix) {
+        this.identityPrefix = identityPrefix;
+    }
+
     protected void addMavenCoordinates(MavenCoordinates coordinates) {
         mavenCoordinates.add(coordinates);
     }
 
-    protected void setTargetDirectory(File target) {
-        this.targetDirectory = target;
+    protected void setTargetPath(Path targetPath) {
+        this.targetPath = targetPath;
     }
 
     protected void setJavaVmArguments(String javaVmArguments) {
@@ -73,6 +87,7 @@ public abstract class AbstractManagedProcessOptions implements ManagedProcessOpt
     }
 
     protected void validate() {
-        IllegalStateAssertion.assertNotNull(targetDirectory, "targetDirectory");
+        IllegalStateAssertion.assertNotNull(identityPrefix, "identityPrefix");
+        IllegalStateAssertion.assertNotNull(targetPath, "targetPath");
     }
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,10 @@
  */
 package org.jboss.gravia.runtime.embedded.internal;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.jboss.gravia.Constants;
 import org.jboss.gravia.runtime.embedded.spi.AbstractRuntimePlugin;
 
 
@@ -35,4 +39,11 @@ public final class ServiceComponentsPlugin extends AbstractRuntimePlugin {
         return "org.apache.felix.scr.impl.Activator";
     }
 
+    @Override
+    protected Dictionary<String, String> getPluginHeaders() {
+        Dictionary<String, String> headers = new Hashtable<>();
+        headers.put(Constants.GRAVIA_IDENTITY_CAPABILITY, "org.jboss.gravia.scr");
+        headers.put(Constants.MODULE_ACTIVATOR, getClass().getName());
+        return headers;
+    }
 }

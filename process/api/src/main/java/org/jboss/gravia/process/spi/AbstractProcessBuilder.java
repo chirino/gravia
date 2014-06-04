@@ -19,16 +19,23 @@
  */
 package org.jboss.gravia.process.spi;
 
-import java.io.File;
+import java.nio.file.Path;
 
-import org.jboss.gravia.process.api.ManagedProcessBuilder;
+import org.jboss.gravia.process.api.ProcessBuilder;
 import org.jboss.gravia.resource.MavenCoordinates;
 
-public abstract class AbstractProcessBuilder<B extends ManagedProcessBuilder<B, T>, T extends AbstractManagedProcessOptions> implements ManagedProcessBuilder<B, T> {
+public abstract class AbstractProcessBuilder<B extends ProcessBuilder<B, T>, T extends AbstractProcessOptions> implements ProcessBuilder<B, T> {
 
     private final T options;
     protected AbstractProcessBuilder(T options) {
         this.options = options;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public B identityPrefix(String prefix) {
+        options.setIdentityPrefix(prefix);
+        return (B) this;
     }
 
     @Override
@@ -40,8 +47,8 @@ public abstract class AbstractProcessBuilder<B extends ManagedProcessBuilder<B, 
 
     @Override
     @SuppressWarnings("unchecked")
-    public B targetDirectory(String target) {
-        options.setTargetDirectory(new File(target).getAbsoluteFile());
+    public B targetPath(Path targetPath) {
+        options.setTargetPath(targetPath);
         return (B) this;
     }
 
@@ -57,5 +64,11 @@ public abstract class AbstractProcessBuilder<B extends ManagedProcessBuilder<B, 
     public B outputToConsole(boolean outputToConsole) {
         options.setOutputToConsole(outputToConsole);
         return (B) this;
+    }
+
+    @Override
+    public T getProcessOptions() {
+        options.validate();
+        return options;
     }
 }

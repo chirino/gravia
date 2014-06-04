@@ -23,17 +23,20 @@
     
     <parent>
         <groupId>org.jboss.gravia</groupId>
-        <artifactId>gravia</artifactId>
+        <artifactId>gravia-itests</artifactId>
         <version>1.1.0.Beta26-SNAPSHOT</version>
     </parent>
 
-    <name>Gravia :: Integration Tests</name>
+    <name>Gravia :: Integration Tests :: Smoke</name>
     
-    <artifactId>gravia-itests</artifactId>
+    <artifactId>gravia-itests-smoke</artifactId>
 	<packaging>pom</packaging>
 	
 	<modules>
-		<module>smoke</module>
+		<module>common</module>
+		<module>karaf</module>
+		<module>tomcat</module>
+        <module>wildfly</module>
 	</modules>
 	
     <build>

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,18 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package org.jboss.gravia.process.api;
-
-import java.net.InetAddress;
+package org.jboss.gravia.process.spi;
 
 
 /**
- * A host wide port manager
+ * The self registration process builder
  *
  * @author thomas.diesler@jboss.com
- * @since 18-Apr-2014
+ * @since 04-Jun-2014
  */
-public interface PortManager {
+public class SelfRegistrationBuilder extends AbstractProcessBuilder<SelfRegistrationBuilder, SelfRegistrationOptions> {
 
-    int nextAvailablePort(int portValue, InetAddress bindAddr);
+    public SelfRegistrationBuilder() {
+        super(new SelfRegistrationOptions());
+    }
+
 }

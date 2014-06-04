@@ -27,13 +27,13 @@
     
     <parent>
         <groupId>org.jboss.gravia</groupId>
-        <artifactId>gravia-itests</artifactId>
+        <artifactId>gravia-itests-smoke</artifactId>
         <version>1.1.0.Beta26-SNAPSHOT</version>
     </parent>
 
-    <name>Gravia :: Integration Tests :: WildFly</name>
+    <name>Gravia :: Integration Tests :: Smoke :: WildFly</name>
     
-    <artifactId>gravia-itests-wildfly</artifactId>
+    <artifactId>gravia-itests-smoke-wildfly</artifactId>
 
     <!-- Properties -->
     <properties>
@@ -45,7 +45,7 @@
         <!-- Provided Dependencies -->
         <dependency>
 	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-itests-common</artifactId>
+	        <artifactId>gravia-itests-smoke-common</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -143,7 +143,7 @@
 			        <redirectTestOutputToFile>false</redirectTestOutputToFile>
                     <reportNameSuffix>wildfly</reportNameSuffix>
                     <dependenciesToScan>
-                        <dependency>org.jboss.gravia:gravia-itests-common</dependency>
+                        <dependency>org.jboss.gravia:gravia-itests-smoke-common</dependency>
                     </dependenciesToScan>
 			        <systemPropertyVariables>
                         <log4j.configuration>file://${basedir}/src/test/resources/logging.properties</log4j.configuration>

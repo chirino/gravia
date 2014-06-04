@@ -19,21 +19,22 @@
  */
 package org.jboss.gravia.runtime.embedded.spi;
 
+import static org.jboss.gravia.runtime.spi.RuntimeLogger.LOGGER;
+
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.jboss.gravia.Constants;
 import org.jboss.gravia.runtime.Module;
 import org.jboss.gravia.runtime.ModuleActivator;
 import org.jboss.gravia.runtime.ModuleContext;
 import org.jboss.gravia.runtime.ModuleException;
 import org.jboss.gravia.runtime.Runtime;
 import org.jboss.gravia.runtime.spi.ManifestHeadersProvider;
-import org.jboss.gravia.runtime.spi.RuntimeLogger;
 import org.jboss.gravia.runtime.spi.RuntimePlugin;
 import org.osgi.framework.BundleActivator;
-import org.osgi.framework.Constants;
 
 /**
  * An abstract {@link RuntimePlugin}
@@ -45,14 +46,19 @@ public abstract class AbstractRuntimePlugin implements RuntimePlugin, ModuleActi
 
     private BundleActivator delegate;
 
-    public abstract String getBundleActivator();
+    protected abstract String getBundleActivator();
+
+    protected Dictionary<String, String> getPluginHeaders() {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public Module installPluginModule(Runtime runtime, ClassLoader classLoader) throws ModuleException {
+
         String resourceName = getBundleActivator().replace('.', '/') + ".class";
         URL resurl = classLoader.getResource(resourceName);
         if (resurl == null) {
-            RuntimeLogger.LOGGER.debug("Cannot load BundleActivator resource '{}'", resourceName);
+            LOGGER.debug("Cannot load BundleActivator resource '{}'", resourceName);
             return null;
         }
 
@@ -60,17 +66,14 @@ public abstract class AbstractRuntimePlugin implements RuntimePlugin, ModuleActi
         urlpath = urlpath.substring(0, urlpath.indexOf(resourceName));
         urlpath = urlpath + JarFile.MANIFEST_NAME;
 
-        Manifest manifest;
+        Manifest manifest = null;
         try {
             manifest = new Manifest(new URL(urlpath).openStream());
         } catch (Exception ex) {
-            throw new ModuleException("Cannot load plugin manifest: " + urlpath, ex);
+            LOGGER.debug("Cannot load plugin manifest '{}'", urlpath);
         }
-        Dictionary<String, String> headers = new ManifestHeadersProvider(manifest).getHeaders();
-        String symbolicName = headers.get(Constants.BUNDLE_SYMBOLICNAME);
-        String version = headers.get(Constants.BUNDLE_VERSION);
-        headers.put(org.jboss.gravia.Constants.GRAVIA_IDENTITY_CAPABILITY, symbolicName + ";version=" + version);
-        headers.put(org.jboss.gravia.Constants.MODULE_ACTIVATOR, getClass().getName());
+
+        Dictionary<String, String> headers = getPluginHeaders(manifest);
         return runtime.installModule(classLoader, headers);
     }
 
@@ -85,5 +88,29 @@ public abstract class AbstractRuntimePlugin implements RuntimePlugin, ModuleActi
         if (delegate != null) {
             delegate.stop(new BundleContextAdaptor(context));
         }
+    }
+
+    /**
+     * Get the plugin headers from the given bundle manifest
+     */
+    private Dictionary<String, String> getPluginHeaders(Manifest manifest) {
+
+        Dictionary<String, String> headers;
+        if (manifest != null) {
+            // Verify that the given manifest contains the expected BundleActivator
+            headers = new ManifestHeadersProvider(manifest).getHeaders();
+            String bundleActivator = headers.get(org.osgi.framework.Constants.BUNDLE_ACTIVATOR);
+            if (getBundleActivator().equals(bundleActivator)) {
+                String symbolicName = headers.get(org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME);
+                String version = headers.get(org.osgi.framework.Constants.BUNDLE_VERSION);
+                headers.put(Constants.GRAVIA_IDENTITY_CAPABILITY, symbolicName + ";version=" + version);
+                headers.put(Constants.MODULE_ACTIVATOR, getClass().getName());
+            } else {
+                headers = getPluginHeaders();
+            }
+        } else {
+            headers = getPluginHeaders();
+        }
+        return headers;
     }
 }
