@@ -17,17 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package io.fabric8.container.wildfly;
-
-import io.fabric8.spi.AbstractManagedCreateOptions;
+package org.jboss.gravia.container.wildfly;
 
 import java.io.IOException;
 import java.util.Properties;
 
+import org.jboss.gravia.process.spi.AbstractProcessOptions;
 import org.jboss.gravia.resource.MavenCoordinates;
 
 
-public final class WildFlyCreateOptions extends AbstractManagedCreateOptions {
+public final class WildFlyProcessOptions extends AbstractProcessOptions {
 
     public static final String DEFAULT_JAVAVM_ARGUMENTS = "-Xmx1024m";
 
@@ -116,7 +115,7 @@ public final class WildFlyCreateOptions extends AbstractManagedCreateOptions {
             String projectVersion = properties.getProperty("project.version");
             String wildflyVersion = properties.getProperty("wildfly.version");
             addMavenCoordinates(MavenCoordinates.create("org.wildfly", "wildfly-dist", wildflyVersion, "zip", null));
-            addMavenCoordinates(MavenCoordinates.create("io.fabric8.poc", "fabric8-container-wildfly-patch", projectVersion, "tar.gz", null));
+            addMavenCoordinates(MavenCoordinates.create("org.jboss.gravia", "gravia-container-wildfly-patch", projectVersion, "tar.gz", null));
         }
         if (getJavaVmArguments() == null) {
             setJavaVmArguments(DEFAULT_JAVAVM_ARGUMENTS);

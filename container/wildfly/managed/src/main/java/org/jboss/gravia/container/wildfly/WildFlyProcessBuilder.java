@@ -18,9 +18,9 @@
  * #L%
  */
 
-package io.fabric8.container.wildfly;
+package org.jboss.gravia.container.wildfly;
 
-import io.fabric8.spi.AbstractManagedContainerBuilder;
+import org.jboss.gravia.process.spi.AbstractProcessBuilder;
 
 /**
  * The WildFly managed container builder
@@ -28,47 +28,47 @@ import io.fabric8.spi.AbstractManagedContainerBuilder;
  * @author thomas.diesler@jboss.com
  * @since 26-Feb-2014
  */
-public class WildFlyContainerBuilder extends AbstractManagedContainerBuilder<WildFlyContainerBuilder, WildFlyCreateOptions> {
+public class WildFlyProcessBuilder extends AbstractProcessBuilder<WildFlyProcessBuilder, WildFlyProcessOptions> {
 
-    public static WildFlyContainerBuilder create() {
-        return new WildFlyContainerBuilder();
+    public static WildFlyProcessBuilder create() {
+        return new WildFlyProcessBuilder();
     }
 
-    private WildFlyContainerBuilder() {
-        super(new WildFlyCreateOptions());
+    private WildFlyProcessBuilder() {
+        super(new WildFlyProcessOptions());
     }
 
-    public WildFlyContainerBuilder serverConfig(String serverConfig) {
+    public WildFlyProcessBuilder serverConfig(String serverConfig) {
         options.setServerConfig(serverConfig);
         return this;
     }
 
-    public WildFlyContainerBuilder managementNativePort(int nativePort) {
+    public WildFlyProcessBuilder managementNativePort(int nativePort) {
         options.setManagementNativePort(nativePort);
         return this;
     }
 
-    public WildFlyContainerBuilder managementHttpPort(int httpPort) {
+    public WildFlyProcessBuilder managementHttpPort(int httpPort) {
         options.setManagementHttpPort(httpPort);
         return this;
     }
 
-    public WildFlyContainerBuilder managementHttpsPort(int httpsPort) {
+    public WildFlyProcessBuilder managementHttpsPort(int httpsPort) {
         options.setManagementHttpsPort(httpsPort);
         return this;
     }
 
-    public WildFlyContainerBuilder ajpPort(int ajpPort) {
+    public WildFlyProcessBuilder ajpPort(int ajpPort) {
         options.setAjpPort(ajpPort);
         return this;
     }
 
-    public WildFlyContainerBuilder httpPort(int httpPort) {
+    public WildFlyProcessBuilder httpPort(int httpPort) {
         options.setHttpPort(httpPort);
         return this;
     }
 
-    public WildFlyContainerBuilder httpsPort(int httpsPort) {
+    public WildFlyProcessBuilder httpsPort(int httpsPort) {
         options.setHttpsPort(httpsPort);
         return this;
     }

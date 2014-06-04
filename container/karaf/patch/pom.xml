@@ -54,6 +54,12 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-wildfly-managed</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
             <artifactId>gravia-process-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>

@@ -31,6 +31,9 @@ import org.jboss.gravia.container.karaf.KarafProcessOptions;
 import org.jboss.gravia.container.tomcat.TomcatProcessBuilder;
 import org.jboss.gravia.container.tomcat.TomcatProcessHandler;
 import org.jboss.gravia.container.tomcat.TomcatProcessOptions;
+import org.jboss.gravia.container.wildfly.WildFlyProcessBuilder;
+import org.jboss.gravia.container.wildfly.WildFlyProcessHandler;
+import org.jboss.gravia.container.wildfly.WildFlyProcessOptions;
 import org.jboss.gravia.process.api.ManagedProcess;
 import org.jboss.gravia.process.api.ManagedProcess.State;
 import org.jboss.gravia.process.api.MutableManagedProcess;
@@ -74,7 +77,7 @@ public class ManagedProcessTest {
                     builder.addBundleSymbolicName(archive.getName());
                     builder.addBundleVersion("1.0.0");
                     builder.addImportPackages(RuntimeLocator.class, ManagedProcess.class, AbstractProcessBuilder.class);
-                    builder.addImportPackages(TomcatProcessBuilder.class, KarafProcessBuilder.class);
+                    builder.addImportPackages(TomcatProcessBuilder.class, KarafProcessBuilder.class, WildFlyProcessBuilder.class);
                     return builder.openStream();
                 } else {
                     ManifestBuilder builder = new ManifestBuilder();
@@ -101,6 +104,13 @@ public class ManagedProcessTest {
     @Test
     public void testWildFlyProcess() throws Exception {
 
+        WildFlyProcessOptions options = WildFlyProcessBuilder.create()
+                .targetPath(Paths.get("target", "process"))
+                .identityPrefix("wildflyProc")
+                .outputToConsole(true)
+                .getProcessOptions();
+
+        verifyManagedProcess(new WildFlyProcessHandler(), options);
     }
 
     @Test
@@ -117,7 +127,7 @@ public class ManagedProcessTest {
 
     private void verifyManagedProcess(ProcessHandler handler, ProcessOptions options) {
 
-        Assert.assertTrue(handler.accept(options));
+        Assert.assertTrue("Handler accepts options", handler.accept(options));
 
         ProcessIdentity identity = ProcessIdentity.create(options.getIdentityPrefix());
         MutableManagedProcess process = handler.create(options, identity);

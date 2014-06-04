@@ -55,6 +55,7 @@
 				<include name="gravia-container-karaf-managed-*.jar" />
 				<include name="gravia-container-tomcat-managed-*.jar" />
 				<include name="gravia-container-tomcat-extension-*.jar" />
+				<include name="gravia-container-wildfly-managed-*.jar" />
 				<include name="gravia-process-*.jar" />
 				<include name="gravia-provision-*.jar" />
 				<include name="gravia-repository-*.jar" />

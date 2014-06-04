@@ -28,6 +28,7 @@
     <resources>
         <resource-root path="gravia-container-karaf-managed-@project.version@.jar"/>
         <resource-root path="gravia-container-tomcat-managed-@project.version@.jar"/>
+        <resource-root path="gravia-container-wildfly-managed-@project.version@.jar"/>
         <resource-root path="gravia-process-api-@project.version@.jar"/>
         <resource-root path="gravia-provision-@project.version@.jar"/>
         <resource-root path="gravia-repository-@project.version@.jar"/>
@@ -45,6 +46,7 @@
     <exports>
         <include path="org/jboss/gravia/container/karaf"/>
         <include path="org/jboss/gravia/container/tomcat"/>
+        <include path="org/jboss/gravia/container/wildfly"/>
         <include path="org/jboss/gravia/process"/>
         <include path="org/jboss/gravia/provision"/>
         <include path="org/jboss/gravia/resource"/>

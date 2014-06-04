@@ -71,6 +71,7 @@
         <fileset dir="${deploy.artifacts.lib}">
 			<include name="gravia-container-karaf-managed-*.jar" />
 			<include name="gravia-container-tomcat-managed-*.jar" />
+			<include name="gravia-container-wildfly-managed-*.jar" />
 			<include name="gravia-process-*.jar" />
 			<include name="gravia-provision-*.jar" />
 			<include name="gravia-repository-*.jar" />
@@ -100,6 +101,7 @@ org/jboss/gravia/${project.version}/gravia-provision-${project.version}.jar=42
 org/jboss/gravia/${project.version}/gravia-process-api-${project.version}.jar=42
 org/jboss/gravia/${project.version}/gravia-container-karaf-managed-${project.version}.jar=42
 org/jboss/gravia/${project.version}/gravia-container-tomcat-managed-${project.version}.jar=42
+org/jboss/gravia/${project.version}/gravia-container-wildfly-managed-${project.version}.jar=42
     	
 #
 # Arquillian OSGi Integration

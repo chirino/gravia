@@ -65,7 +65,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Activator>org.jboss.gravia.runtime.ModuleActivatorBridge</Bundle-Activator>
-                        <Module-Activator>io.fabric8.container.wildfly.internal.WildFlyContainerActivator</Module-Activator>
+                        <Module-Activator>org.jboss.gravia.container.wildfly.internal.WildFlyContainerActivator</Module-Activator>
                         <Import-Package>
                             !org.jboss.modules,
                             *
