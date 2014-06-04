@@ -33,7 +33,9 @@
 	<packaging>pom</packaging>
 	
 	<modules>
-		<module>smoke</module>
+		<module>common</module>
+        <module>smoke</module>
+        <module>basic</module>
 	</modules>
 	
     <build>
