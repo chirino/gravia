@@ -30,15 +30,13 @@ import javax.management.MBeanServer;
 
 import org.jboss.gravia.agent.Agent;
 import org.jboss.gravia.process.api.ManagedProcess;
-import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.MutableManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
 import org.jboss.gravia.process.api.ProcessOptions;
 import org.jboss.gravia.process.spi.ImmutableManagedProcess;
 import org.jboss.gravia.process.spi.ProcessHandler;
 import org.jboss.gravia.process.spi.SelfRegistrationHandler;
 import org.jboss.gravia.runtime.LifecycleException;
-import org.jboss.gravia.runtime.ModuleContext;
-import org.jboss.gravia.runtime.RuntimeLocator;
 import org.jboss.gravia.utils.IllegalStateAssertion;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Activate;
@@ -76,10 +74,7 @@ public final class AgentService implements Agent {
     private void activateInternal() {
 
         // Register the self registration handler
-        ProcessHandler processHandler = new SelfRegistrationHandler();
-        ModuleContext syscontext = RuntimeLocator.getRequiredRuntime().getModuleContext();
-        syscontext.registerService(ProcessHandler.class, processHandler, null);
-        processHandlers.add(processHandler);
+        processHandlers.add(new SelfRegistrationHandler());
     }
 
     @Override
@@ -98,12 +93,13 @@ public final class AgentService implements Agent {
 
     @Override
     public ManagedProcess getManagedProcess(ProcessIdentity processId) {
-        return getRequiredRegistration(processId).getManagedProcess();
+        Registration preg = getRequiredRegistration(processId);
+        return new ImmutableManagedProcess(preg.getManagedProcess());
     }
 
     @Override
     public ManagedProcess createProcess(ProcessOptions options) {
-        ManagedProcess process = null;
+        MutableManagedProcess process = null;
         for (ProcessHandler handler : processHandlers) {
             if (handler.accept(options)) {
                 String identitySpec = options.getIdentityPrefix();
@@ -122,25 +118,22 @@ public final class AgentService implements Agent {
     @Override
     public void startProcess(ProcessIdentity processId) throws LifecycleException {
         Registration preg = getRequiredRegistration(processId);
-        ManagedProcess process = preg.getManagedProcess();
+        MutableManagedProcess process = preg.getManagedProcess();
         preg.getProcessHandler().start(process);
-        preg.setProcess(new ImmutableManagedProcess(process, State.STARTED));
     }
 
     @Override
     public void stopProcess(ProcessIdentity processId) throws LifecycleException {
         Registration preg = getRequiredRegistration(processId);
-        ManagedProcess process = preg.getManagedProcess();
+        MutableManagedProcess process = preg.getManagedProcess();
         preg.getProcessHandler().stop(process);
-        preg.setProcess(new ImmutableManagedProcess(process, State.STOPPED));
     }
 
     @Override
     public void destroyProcess(ProcessIdentity processId) {
         Registration preg = getRequiredRegistration(processId);
-        ManagedProcess process = preg.getManagedProcess();
+        MutableManagedProcess process = preg.getManagedProcess();
         preg.getProcessHandler().destroy(process);
-        preg.setProcess(new ImmutableManagedProcess(process, State.DESTROYED));
     }
 
     private Registration getRequiredRegistration(ProcessIdentity processId) {
@@ -176,10 +169,11 @@ public final class AgentService implements Agent {
     }
 
     static class Registration {
-        private final ProcessHandler handler;
-        private ManagedProcess process;
 
-        Registration(ProcessHandler handler, ManagedProcess process) {
+        private final ProcessHandler handler;
+        private MutableManagedProcess process;
+
+        Registration(ProcessHandler handler, MutableManagedProcess process) {
             this.handler = handler;
             this.process = process;
         }
@@ -188,12 +182,8 @@ public final class AgentService implements Agent {
             return handler;
         }
 
-        ManagedProcess getManagedProcess() {
+        MutableManagedProcess getManagedProcess() {
             return process;
-        }
-
-        void setProcess(ManagedProcess process) {
-            this.process = process;
         }
     }
 }

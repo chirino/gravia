@@ -41,28 +41,9 @@
     <dependencies>
         <!-- Provided Dependencies -->
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.eventadmin</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.http.bundle</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.metatype</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.osgi</groupId>
-            <artifactId>arquillian-osgi-bundle</artifactId>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-karaf-managed</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -96,15 +77,41 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-runtime-api</artifactId>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-runtime-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-runtime-osgi</artifactId>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-runtime-osgi</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.eventadmin</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.http.bundle</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.metatype</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.osgi</groupId>
+            <artifactId>arquillian-osgi-bundle</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

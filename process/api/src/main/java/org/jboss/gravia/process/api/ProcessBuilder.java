@@ -20,11 +20,13 @@
 package org.jboss.gravia.process.api;
 
 import java.nio.file.Path;
+import java.util.Map;
 
+import org.jboss.gravia.resource.AttributeKey;
 import org.jboss.gravia.resource.MavenCoordinates;
 
 /**
- * A builder for a fabric container
+ * Builder for {@link ProcessOptions}
  *
  * @author thomas.diesler@jboss.com
  * @since 14-Mar-2014
@@ -40,6 +42,10 @@ public interface ProcessBuilder<B extends ProcessBuilder<B, C>, C extends Proces
     B addMavenCoordinates(MavenCoordinates coordinates);
 
     B outputToConsole(boolean outputToConsole);
+
+    <V> B addAttribute(AttributeKey<V> key, V value);
+
+    B addAttributes(Map<AttributeKey<?>, Object> attributes);
 
     C getProcessOptions();
 }

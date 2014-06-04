@@ -20,13 +20,16 @@
 package org.jboss.gravia.process.spi;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import org.jboss.gravia.process.api.ProcessBuilder;
+import org.jboss.gravia.resource.AttributeKey;
 import org.jboss.gravia.resource.MavenCoordinates;
 
 public abstract class AbstractProcessBuilder<B extends ProcessBuilder<B, T>, T extends AbstractProcessOptions> implements ProcessBuilder<B, T> {
 
-    private final T options;
+    protected final T options;
+
     protected AbstractProcessBuilder(T options) {
         this.options = options;
     }
@@ -63,6 +66,20 @@ public abstract class AbstractProcessBuilder<B extends ProcessBuilder<B, T>, T e
     @SuppressWarnings("unchecked")
     public B outputToConsole(boolean outputToConsole) {
         options.setOutputToConsole(outputToConsole);
+        return (B) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <V> B addAttribute(AttributeKey<V> key, V value) {
+        options.addAttribute(key, value);
+        return (B) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public B addAttributes(Map<AttributeKey<?>, Object> atts) {
+        options.addAttributes(atts);
         return (B) this;
     }
 

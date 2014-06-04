@@ -20,10 +20,19 @@
 package org.jboss.test.gravia.itests.basic;
 
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.osgi.StartLevelAware;
+import org.jboss.gravia.container.karaf.KarafProcessBuilder;
+import org.jboss.gravia.container.karaf.KarafProcessHandler;
+import org.jboss.gravia.container.karaf.KarafProcessOptions;
+import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.MutableManagedProcess;
+import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.process.spi.AbstractProcessBuilder;
 import org.jboss.gravia.resource.ManifestBuilder;
 import org.jboss.gravia.runtime.RuntimeLocator;
 import org.jboss.gravia.runtime.RuntimeType;
@@ -32,6 +41,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.test.gravia.itests.support.AnnotatedContextListener;
 import org.jboss.test.gravia.itests.support.ArchiveBuilder;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -58,7 +68,8 @@ public class ManagedProcessTest {
                     builder.addBundleManifestVersion(2);
                     builder.addBundleSymbolicName(archive.getName());
                     builder.addBundleVersion("1.0.0");
-                    builder.addImportPackages(RuntimeLocator.class);
+                    builder.addImportPackages(RuntimeLocator.class, ManagedProcess.class, AbstractProcessBuilder.class);
+                    builder.addImportPackages(KarafProcessBuilder.class);
                     return builder.openStream();
                 } else {
                     ManifestBuilder builder = new ManifestBuilder();
@@ -83,5 +94,25 @@ public class ManagedProcessTest {
     @Test
     public void testKarafProcess() throws Exception {
 
+        KarafProcessOptions options = KarafProcessBuilder.create()
+                .targetPath(Paths.get("target", "process"))
+                .identityPrefix("karafProc")
+                .getProcessOptions();
+
+        KarafProcessHandler handler = new KarafProcessHandler();
+        Assert.assertTrue(handler.accept(options));
+
+        ProcessIdentity identity = ProcessIdentity.create(options.getIdentityPrefix());
+        MutableManagedProcess process = handler.create(options, identity);
+        Assert.assertEquals(State.CREATED, process.getState());
+
+        handler.start(process);
+        Assert.assertEquals(State.STARTED, process.getState());
+
+        handler.stop(process);
+        Assert.assertEquals(State.STOPPED, process.getState());
+
+        handler.destroy(process);
+        Assert.assertEquals(State.DESTROYED, process.getState());
     }
 }

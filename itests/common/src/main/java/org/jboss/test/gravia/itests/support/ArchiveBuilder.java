@@ -97,6 +97,17 @@ public class ArchiveBuilder  {
         return this;
     }
 
+    public ArchiveBuilder addAsResource(Package resourcePackage, String resname) {
+        if (archive instanceof WebContainer) {
+            WebContainer<?> container = (WebContainer<?>) archive;
+            container.addAsWebResource(resourcePackage, resname);
+        } else {
+            ResourceContainer<?> container = (ResourceContainer<?>) archive;
+            container.addAsResource(resourcePackage, resname);
+        }
+        return this;
+    }
+
     public ArchiveBuilder setManifest(Asset manifestAsset) {
         ManifestContainer<?> container = (ManifestContainer<?>) archive;
         container.setManifest(manifestAsset);

@@ -21,6 +21,7 @@ package org.jboss.gravia.agent.internal;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.gravia.agent.Agent;
 import org.jboss.gravia.process.api.ManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
+import org.jboss.gravia.resource.AttributeKey;
 
 /**
  * The agent servlet
@@ -67,6 +69,11 @@ public final class AgentServlet extends HttpServlet {
             ManagedProcess process = agent.getManagedProcess(procid);
             writer.println("   ProcessIdentity: " + process.getIdentity());
             writer.println("   State: " + process.getState());
+            writer.println("   Attributes:");
+            for (Entry<AttributeKey<?>, Object> entry : process.getAttributes().entrySet()) {
+                writer.println("      " + entry.getKey() + "=" + entry.getValue());
+            }
+            writer.println();
         }
         writer.println();
     }

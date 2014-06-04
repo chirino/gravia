@@ -23,14 +23,19 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.resource.AttributeKey;
 import org.jboss.gravia.resource.MavenCoordinates;
+import org.jboss.gravia.resource.spi.AttributeSupport;
 import org.jboss.gravia.utils.IllegalStateAssertion;
 
 
 public abstract class AbstractProcessOptions implements ProcessOptions {
 
+    private AttributeSupport attributes = new AttributeSupport();
     private List<MavenCoordinates> mavenCoordinates = new ArrayList<MavenCoordinates>();
     private boolean outputToConsole;
     private String identityPrefix;
@@ -66,6 +71,26 @@ public abstract class AbstractProcessOptions implements ProcessOptions {
      * Setters are protected
      */
 
+    @Override
+    public Set<AttributeKey<?>> getAttributeKeys() {
+        return attributes.getAttributeKeys();
+    }
+
+    @Override
+    public <T> T getAttribute(AttributeKey<T> key) {
+        return attributes.getAttribute(key);
+    }
+
+    @Override
+    public <T> boolean hasAttribute(AttributeKey<T> key) {
+        return attributes.hasAttribute(key);
+    }
+
+    @Override
+    public Map<AttributeKey<?>, Object> getAttributes() {
+        return attributes.getAttributes();
+    }
+
     protected void setIdentityPrefix(String identityPrefix) {
         this.identityPrefix = identityPrefix;
     }
@@ -84,6 +109,14 @@ public abstract class AbstractProcessOptions implements ProcessOptions {
 
     protected void setOutputToConsole(boolean outputToConsole) {
         this.outputToConsole = outputToConsole;
+    }
+
+    protected <V> void addAttribute(AttributeKey<V> key, V value) {
+        attributes.putAttribute(key, value);
+    }
+
+    protected void addAttributes(Map<AttributeKey<?>, Object> atts) {
+        attributes.putAllAttributes(atts);
     }
 
     protected void validate() {

@@ -37,6 +37,7 @@
             <includes>
                 <include>*:arquillian-osgi-bundle:jar</include>
                 <include>*:commons-compress:jar</include>
+                <include>*:gravia-container-karaf-managed:jar</include>
                 <include>*:gravia-process-api:jar</include>
                 <include>*:gravia-provision:jar</include>
                 <include>*:gravia-repository:jar</include>

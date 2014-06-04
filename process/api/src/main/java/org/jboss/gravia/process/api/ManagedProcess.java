@@ -22,6 +22,8 @@ package org.jboss.gravia.process.api;
 
 import java.nio.file.Path;
 
+import org.jboss.gravia.resource.Attributable;
+
 
 /**
  * The managed root container
@@ -29,7 +31,7 @@ import java.nio.file.Path;
  * @author thomas.diesler@jboss.com
  * @since 26-Feb-2014
  */
-public interface ManagedProcess {
+public interface ManagedProcess extends Attributable {
 
     enum State {
         CREATED, STARTED, STOPPED, DESTROYED

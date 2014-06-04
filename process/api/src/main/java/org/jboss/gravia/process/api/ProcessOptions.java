@@ -22,6 +22,8 @@ package org.jboss.gravia.process.api;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.jboss.gravia.resource.Attributable;
+import org.jboss.gravia.resource.AttributeKey;
 import org.jboss.gravia.resource.MavenCoordinates;
 
 /**
@@ -30,7 +32,20 @@ import org.jboss.gravia.resource.MavenCoordinates;
  * @author thomas.diesler@jboss.com
  * @since 14-Mar-2014
  */
-public interface ProcessOptions {
+public interface ProcessOptions extends Attributable {
+
+    /**
+     * The attribute key for the Http port
+     */
+    AttributeKey<Integer> ATTRIBUTE_KEY_HTTP_PORT = AttributeKey.create("gravia.http.port", Integer.class);
+    /**
+     * The attribute key for the Https port
+     */
+    AttributeKey<Integer> ATTRIBUTE_KEY_HTTPS_PORT = AttributeKey.create("gravia.https.port", Integer.class);
+    /**
+     * The attribute key for JMX server URL
+     */
+    AttributeKey<String> ATTRIBUTE_KEY_JMX_SERVER_URL = AttributeKey.create("gravia.jmx.server.url", String.class);
 
     String getIdentityPrefix();
 

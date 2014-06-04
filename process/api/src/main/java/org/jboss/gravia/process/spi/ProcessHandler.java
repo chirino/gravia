@@ -19,7 +19,7 @@
  */
 package org.jboss.gravia.process.spi;
 
-import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.MutableManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
 import org.jboss.gravia.process.api.ProcessOptions;
 import org.jboss.gravia.runtime.LifecycleException;
@@ -35,11 +35,11 @@ public interface ProcessHandler {
 
     boolean accept(ProcessOptions options);
 
-    ManagedProcess create(ProcessOptions options, ProcessIdentity identity);
+    MutableManagedProcess create(ProcessOptions options, ProcessIdentity identity);
 
-    void start(ManagedProcess process) throws LifecycleException;
+    void start(MutableManagedProcess process) throws LifecycleException;
 
-    void stop(ManagedProcess process) throws LifecycleException;
+    void stop(MutableManagedProcess process) throws LifecycleException;
 
-    void destroy(ManagedProcess process);
+    void destroy(MutableManagedProcess process);
 }

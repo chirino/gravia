@@ -19,10 +19,10 @@
  */
 package org.jboss.gravia.process.spi;
 
-import org.jboss.gravia.process.api.ManagedProcess;
+import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.MutableManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
 import org.jboss.gravia.process.api.ProcessOptions;
-import org.jboss.gravia.process.api.ManagedProcess.State;
 import org.jboss.gravia.runtime.LifecycleException;
 
 /**
@@ -39,22 +39,22 @@ public class SelfRegistrationHandler implements ProcessHandler {
     }
 
     @Override
-    public ManagedProcess create(ProcessOptions options, ProcessIdentity identity) {
-        return new ImmutableManagedProcess(identity, options, options.getTargetPath(), State.STARTED);
+    public MutableManagedProcess create(ProcessOptions options, ProcessIdentity identity) {
+        return new DefaultManagedProcess(identity, options, options.getTargetPath(), State.STARTED);
     }
 
     @Override
-    public void start(ManagedProcess process) throws LifecycleException {
+    public void start(MutableManagedProcess process) throws LifecycleException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void stop(ManagedProcess process) throws LifecycleException {
+    public void stop(MutableManagedProcess process) throws LifecycleException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void destroy(ManagedProcess process) {
+    public void destroy(MutableManagedProcess process) {
         throw new UnsupportedOperationException();
     }
 }

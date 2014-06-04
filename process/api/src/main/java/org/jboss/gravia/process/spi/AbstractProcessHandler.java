@@ -32,8 +32,8 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
-import org.jboss.gravia.process.api.ManagedProcess;
 import org.jboss.gravia.process.api.ManagedProcess.State;
+import org.jboss.gravia.process.api.MutableManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
 import org.jboss.gravia.process.api.ProcessOptions;
 import org.jboss.gravia.process.utils.HostUtils;
@@ -64,12 +64,7 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
     }
 
     @Override
-    public boolean accept(ProcessOptions options) {
-        return false;
-    }
-
-    @Override
-    public final ManagedProcess create(ProcessOptions options, ProcessIdentity identity) {
+    public final MutableManagedProcess create(ProcessOptions options, ProcessIdentity identity) {
 
         File targetDir = options.getTargetPath().toAbsolutePath().toFile();
         IllegalStateAssertion.assertTrue(targetDir.isDirectory() || targetDir.mkdirs(), "Cannot create target dir: " + targetDir);
@@ -125,7 +120,7 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
             }
         }
 
-        ManagedProcess managedProcess = new ImmutableManagedProcess(identity, options, homeDir.toPath(), State.CREATED);
+        MutableManagedProcess managedProcess = new DefaultManagedProcess(identity, options, homeDir.toPath(), State.CREATED);
         try {
             doConfigure(managedProcess);
         } catch (Exception ex) {
@@ -135,13 +130,14 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
     }
 
     @Override
-    public final void start(ManagedProcess process) {
+    public final void start(MutableManagedProcess process) {
         State state = process.getState();
         assertNotDestroyed(state);
         try {
             if (state == State.CREATED || state == State.STOPPED) {
                 doStart(process);
                 IllegalStateAssertion.assertNotNull(process, "No process created");
+                process.setState(State.STARTED);
             }
         } catch (Exception ex) {
             throw new LifecycleException("Cannot start container", ex);
@@ -149,12 +145,13 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
     }
 
     @Override
-    public final void stop(ManagedProcess process) {
+    public final void stop(MutableManagedProcess process) {
         State state = process.getState();
         assertNotDestroyed(state);
         try {
             if (state == State.STARTED) {
                 doStop(process);
+                process.setState(State.STOPPED);
                 destroyProcess();
             }
         } catch (Exception ex) {
@@ -163,7 +160,7 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
     }
 
     @Override
-    public final void destroy(ManagedProcess process) {
+    public final void destroy(MutableManagedProcess process) {
         State state = process.getState();
         assertNotDestroyed(state);
         if (state == State.STARTED) {
@@ -177,6 +174,8 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
             doDestroy(process);
         } catch (Exception ex) {
             throw new LifecycleException("Cannot destroy container", ex);
+        } finally {
+            process.setState(State.DESTROYED);
         }
     }
 
@@ -184,16 +183,16 @@ public abstract class AbstractProcessHandler implements ProcessHandler {
         IllegalStateAssertion.assertFalse(state == State.DESTROYED, "Cannot start container in state: " + state);
     }
 
-    protected void doConfigure(ManagedProcess process) throws Exception {
+    protected void doConfigure(MutableManagedProcess process) throws Exception {
     }
 
-    protected void doStart(ManagedProcess process) throws Exception {
+    protected void doStart(MutableManagedProcess process) throws Exception {
     }
 
-    protected void doStop(ManagedProcess process) throws Exception {
+    protected void doStop(MutableManagedProcess process) throws Exception {
     }
 
-    protected void doDestroy(ManagedProcess process) throws Exception {
+    protected void doDestroy(MutableManagedProcess process) throws Exception {
     }
 
     protected void startProcess(ProcessBuilder processBuilder, ProcessOptions options) throws IOException {

@@ -33,6 +33,7 @@
     <name>Gravia :: Container :: Karaf</name>
     
     <modules>
+        <module>managed</module>
         <module>patch</module>
     </modules>
     

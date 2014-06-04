@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import org.jboss.gravia.process.api.ManagedProcess;
 import org.jboss.gravia.process.api.ProcessIdentity;
 import org.jboss.gravia.process.api.ProcessOptions;
+import org.jboss.gravia.resource.spi.AttributeSupport;
 import org.jboss.gravia.utils.IllegalArgumentAssertion;
 
 /**
@@ -33,7 +34,7 @@ import org.jboss.gravia.utils.IllegalArgumentAssertion;
  * @author thomas.diesler@jboss.com
  * @since 26-Feb-2014
  */
-public final class ImmutableManagedProcess implements ManagedProcess {
+public final class ImmutableManagedProcess extends AttributeSupport implements ManagedProcess {
 
     private final ProcessIdentity identity;
     private final ProcessOptions options;
@@ -41,8 +42,8 @@ public final class ImmutableManagedProcess implements ManagedProcess {
     private final State state;
 
     public ImmutableManagedProcess(ProcessIdentity identity, ProcessOptions options, Path homePath, State state) {
+        super(options.getAttributes(), true);
         IllegalArgumentAssertion.assertNotNull(identity, "identity");
-        IllegalArgumentAssertion.assertNotNull(options, "options");
         IllegalArgumentAssertion.assertNotNull(homePath, "homePath");
         IllegalArgumentAssertion.assertNotNull(state, "state");
         this.identity = identity;
@@ -51,13 +52,12 @@ public final class ImmutableManagedProcess implements ManagedProcess {
         this.state = state;
     }
 
-    public ImmutableManagedProcess(ManagedProcess process, State state) {
-        IllegalArgumentAssertion.assertNotNull(process, "process");
-        IllegalArgumentAssertion.assertNotNull(state, "state");
+    public ImmutableManagedProcess(ManagedProcess process) {
+        super(process.getAttributes(), true);
         this.identity = process.getIdentity();
         this.options = process.getCreateOptions();
         this.homePath = process.getHomePath();
-        this.state = state;
+        this.state = process.getState();
     }
 
     public ProcessIdentity getIdentity() {
