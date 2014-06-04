@@ -46,7 +46,19 @@
         <!-- Provided Dependencies -->
         <dependency>
             <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-karaf-managed</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
             <artifactId>gravia-container-tomcat-extension</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-tomcat-managed</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

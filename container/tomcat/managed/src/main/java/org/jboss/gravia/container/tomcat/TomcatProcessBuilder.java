@@ -18,9 +18,9 @@
  * #L%
  */
 
-package io.fabric8.container.tomcat;
+package org.jboss.gravia.container.tomcat;
 
-import io.fabric8.spi.AbstractManagedContainerBuilder;
+import org.jboss.gravia.process.spi.AbstractProcessBuilder;
 
 
 /**
@@ -29,32 +29,32 @@ import io.fabric8.spi.AbstractManagedContainerBuilder;
  * @author thomas.diesler@jboss.com
  * @since 26-Feb-2014
  */
-public class TomcatContainerBuilder extends AbstractManagedContainerBuilder<TomcatContainerBuilder, TomcatCreateOptions> {
+public class TomcatProcessBuilder extends AbstractProcessBuilder<TomcatProcessBuilder, TomcatProcessOptions> {
 
-    public static TomcatContainerBuilder create() {
-        return new TomcatContainerBuilder();
+    public static TomcatProcessBuilder create() {
+        return new TomcatProcessBuilder();
     }
 
-    private TomcatContainerBuilder() {
-        super(new TomcatCreateOptions());
+    private TomcatProcessBuilder() {
+        super(new TomcatProcessOptions());
     }
 
-    public TomcatContainerBuilder jmxPort(int jmxPort) {
+    public TomcatProcessBuilder jmxPort(int jmxPort) {
         options.setJmxPort(jmxPort);
         return this;
     }
 
-    public TomcatContainerBuilder ajpPort(int ajpPort) {
+    public TomcatProcessBuilder ajpPort(int ajpPort) {
         options.setAjpPort(ajpPort);
         return this;
     }
 
-    public TomcatContainerBuilder httpPort(int httpPort) {
+    public TomcatProcessBuilder httpPort(int httpPort) {
         options.setHttpPort(httpPort);
         return this;
     }
 
-    public TomcatContainerBuilder httpsPort(int httpsPort) {
+    public TomcatProcessBuilder httpsPort(int httpsPort) {
         options.setHttpsPort(httpsPort);
         return this;
     }

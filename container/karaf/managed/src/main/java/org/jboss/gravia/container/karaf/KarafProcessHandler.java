@@ -162,12 +162,6 @@ public final class KarafProcessHandler extends AbstractProcessHandler {
         // Main class
         cmd.add("org.apache.karaf.main.Main");
 
-        // Output the startup command
-        StringBuffer cmdstr = new StringBuffer();
-        for (String tok : cmd) {
-            cmdstr.append(tok + " ");
-        }
-
         ProcessBuilder processBuilder = new ProcessBuilder(cmd);
         processBuilder.directory(karafHome);
         processBuilder.redirectErrorStream(true);

@@ -70,6 +70,7 @@
     <copy todir="${karaf.patch.dir}/system/org/jboss/gravia/${project.version}" overwrite="true">
         <fileset dir="${deploy.artifacts.lib}">
 			<include name="gravia-container-karaf-managed-*.jar" />
+			<include name="gravia-container-tomcat-managed-*.jar" />
 			<include name="gravia-process-*.jar" />
 			<include name="gravia-provision-*.jar" />
 			<include name="gravia-repository-*.jar" />
@@ -98,6 +99,7 @@ org/jboss/gravia/${project.version}/gravia-resolver-${project.version}.jar=41
 org/jboss/gravia/${project.version}/gravia-provision-${project.version}.jar=42
 org/jboss/gravia/${project.version}/gravia-process-api-${project.version}.jar=42
 org/jboss/gravia/${project.version}/gravia-container-karaf-managed-${project.version}.jar=42
+org/jboss/gravia/${project.version}/gravia-container-tomcat-managed-${project.version}.jar=42
     	
 #
 # Arquillian OSGi Integration

@@ -35,13 +35,10 @@
             <outputDirectory>lib</outputDirectory>
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
-                <include>*:org.apache.felix.configadmin:jar</include>
-                <include>*:org.apache.felix.http.bridge:jar</include>
-                <include>*:org.apache.felix.log:jar</include>
-                <include>*:org.apache.felix.metatype:jar</include>
-                <include>*:org.apache.felix.scr:jar</include>
                 <include>*:commons-compress:jar</include>
                 <include>*:gravia-container-common:jar</include>
+                <include>*:gravia-container-karaf-managed:jar</include>
+                <include>*:gravia-container-tomcat-managed:jar</include>
                 <include>*:gravia-container-wildfly-extension:jar</include>
                 <include>*:gravia-process-api:jar</include>
                 <include>*:gravia-provision:jar</include>
@@ -51,6 +48,11 @@
                 <include>*:gravia-resource:jar</include>
                 <include>*:gravia-runtime-api:jar</include>
                 <include>*:gravia-runtime-embedded:jar</include>
+                <include>*:org.apache.felix.configadmin:jar</include>
+                <include>*:org.apache.felix.http.bridge:jar</include>
+                <include>*:org.apache.felix.log:jar</include>
+                <include>*:org.apache.felix.metatype:jar</include>
+                <include>*:org.apache.felix.scr:jar</include>
                 <include>*:org.osgi.enterprise:jar</include>
             </includes>
             <scope>provided</scope>

@@ -44,6 +44,66 @@
     <dependencies>
     	<!-- Provided Dependencies -->
         <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-karaf-managed</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-tomcat-managed</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-container-wildfly-extension</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-process-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-provision</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-repository</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-resolver</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-resource</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-runtime-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.gravia</groupId>
+            <artifactId>gravia-runtime-embedded</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.configadmin</artifactId>
             <scope>provided</scope>
@@ -66,54 +126,6 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.gravia</groupId>
-            <artifactId>gravia-container-wildfly-extension</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-process-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.gravia</groupId>
-            <artifactId>gravia-provision</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-repository</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-resolver</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-resource</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-runtime-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-	        <groupId>org.jboss.gravia</groupId>
-	        <artifactId>gravia-runtime-embedded</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

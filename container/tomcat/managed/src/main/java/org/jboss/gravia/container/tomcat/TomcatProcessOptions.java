@@ -17,17 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package io.fabric8.container.tomcat;
-
-import io.fabric8.spi.AbstractManagedCreateOptions;
+package org.jboss.gravia.container.tomcat;
 
 import java.io.IOException;
 import java.util.Properties;
 
+import org.jboss.gravia.process.spi.AbstractProcessOptions;
 import org.jboss.gravia.resource.MavenCoordinates;
 
 
-public final class TomcatCreateOptions extends AbstractManagedCreateOptions {
+public final class TomcatProcessOptions extends AbstractProcessOptions {
 
     public static final String DEFAULT_JAVAVM_ARGUMENTS = "-Xmx512m -XX:MaxPermSize=128m";
 
@@ -82,8 +81,10 @@ public final class TomcatCreateOptions extends AbstractManagedCreateOptions {
             } catch (IOException ex) {
                 throw new IllegalStateException("Cannot load version.properties", ex);
             }
+            String tomcatVersion = properties.getProperty("tomcat.version");
             String projectVersion = properties.getProperty("project.version");
-            addMavenCoordinates(MavenCoordinates.create("io.fabric8.poc", "fabric8-tomcat", projectVersion, "tar.gz", null));
+            addMavenCoordinates(MavenCoordinates.create("org.apache.tomcat", "tomcat", tomcatVersion, "tar.gz", null));
+            addMavenCoordinates(MavenCoordinates.create("org.jboss.gravia", "gravia-container-tomcat-patch", projectVersion, "tar.gz", null));
         }
         if (getJavaVmArguments() == null) {
             setJavaVmArguments(DEFAULT_JAVAVM_ARGUMENTS);

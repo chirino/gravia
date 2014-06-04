@@ -51,6 +51,9 @@
 		<copy todir="${tomcat.patch.dir}/lib" overwrite="true">
 	        <fileset dir="${deploy.artifacts.lib}">
 				<include name="ant-*.jar" />
+				<include name="commons-compress-*.jar" />
+				<include name="gravia-container-karaf-managed-*.jar" />
+				<include name="gravia-container-tomcat-managed-*.jar" />
 				<include name="gravia-container-tomcat-extension-*.jar" />
 				<include name="gravia-process-*.jar" />
 				<include name="gravia-provision-*.jar" />
